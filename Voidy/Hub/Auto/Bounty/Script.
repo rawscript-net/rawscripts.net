@@ -1,0 +1,96 @@
+local adminKey = "12345678910"
+local keyURL = "https://pastebin.com/raw/YOUR_PASTEBIN_KEY"
+
+local function fetchKey()
+    local success, response = pcall(function()
+        return game:HttpGet(keyURL)
+    end)
+
+    if success then
+        local latestKey, keyTimestamp = response:match("([^|]+)|([^|]+)")
+        return latestKey, tonumber(keyTimestamp) or 0
+    else
+        return nil, nil
+    end
+end
+
+local latestKey, keyTimestamp = fetchKey()
+local expirationTime = 86400
+local currentTime = os.time()
+local isExpired = (currentTime - keyTimestamp) > expirationTime
+
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+local TextBox = Instance.new("TextBox")
+local ConfirmButton = Instance.new("TextButton")
+
+ScreenGui.Parent = game.CoreGui
+Frame.Parent = ScreenGui
+TextLabel.Parent = Frame
+TextBox.Parent = Frame
+ConfirmButton.Parent = Frame
+
+Frame.Size = UDim2.new(0, 300, 0, 150)
+Frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+Frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+
+TextLabel.Text = "Enter Key to Proceed"
+TextLabel.Size = UDim2.new(1, 0, 0.3, 0)
+TextLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+TextBox.PlaceholderText = "Enter Key Here"
+TextBox.Size = UDim2.new(0.8, 0, 0.3, 0)
+TextBox.Position = UDim2.new(0.1, 0, 0.4, 0)
+TextBox.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+ConfirmButton.Text = "Submit"
+ConfirmButton.Size = UDim2.new(0.6, 0, 0.3, 0)
+ConfirmButton.Position = UDim2.new(0.2, 0, 0.75, 0)
+ConfirmButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+ConfirmButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+ConfirmButton.MouseButton1Click:Connect(function()
+    local userKey = TextBox.Text
+
+    if isExpired then
+        TextLabel.Text = "Key Expired! Get a new one."
+        return
+    end
+
+    if userKey == latestKey or userKey == adminKey then
+        ScreenGui:Destroy()
+        print("Correct Key! Executing script...")
+
+        wait(1)
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/rawscript-net/rawscripts.net/refs/heads/main/Key/System/Voidy'))()
+
+        wait(2)
+
+        local VoidyHubConfig = {
+            ["Avatar"] = "rbxassetid://8598068647",
+            ["Farm Method"] = "Normal",
+            ["Select Team"] = "Pirate",
+            ["Max Level Distance"] = 612,
+            ["Don't attack friends"] = true,
+            ["Yourself"] = {["Invisible From Ken"] = true, ["No Stun"] = true},
+            ["SafeZone"] = {Enabled = true, ["Health Left (%)"] = 25, ["Wait Until Heal (%)"] = 80},
+            ["Abilities"] = {
+                ["Auto Click"] = true,
+                ["Melee"] = {Z = {Enabled = true}, X = {Enabled = true}, C = {Enabled = true}},
+                ["Sword"] = {Z = {Enabled = true}, X = {Enabled = true}},
+                ["Gun"] = {Z = {Enabled = true}, X = {Enabled = true}},
+                ["Fruit"] = {Z = {Enabled = false}, X = {Enabled = false}, C = {Enabled = false}},
+            },
+        }
+
+        _G.SupperFixLag = true
+        _G["Auto Gacha & Store Fruit"] = true
+        _G.loadCustomId = "fac6dbd013c78163f8061ce11b2c1330"
+
+    else
+        TextLabel.Text = "Invalid Key! Try Again."
+    end
+end)
