@@ -1,0 +1,120 @@
+local adminKey = "12345678910"
+
+local keyURL = "https://rekonise.com/key-system-fekre"
+local rawData = game:HttpGet(keyURL)
+local latestKey, keyTimestamp = rawData:match("([^|]+)|([^|]+)")
+
+keyTimestamp = tonumber(keyTimestamp) or 0
+
+local currentTime = os.time()
+
+local expirationTime = 86400 -- 24 hours in seconds
+local isExpired = (currentTime - keyTimestamp) > expirationTime
+
+local attempts = 3
+
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+local TextBox = Instance.new("TextBox")
+local ConfirmButton = Instance.new("TextButton")
+
+ScreenGui.Parent = game.CoreGui
+Frame.Parent = ScreenGui
+TextLabel.Parent = Frame
+TextBox.Parent = Frame
+ConfirmButton.Parent = Frame
+
+Frame.Size = UDim2.new(0, 300, 0, 150)
+Frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+Frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+
+TextLabel.Text = "Enter Key to Proceed"
+TextLabel.Size = UDim2.new(1, 0, 0.3, 0)
+TextLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+TextBox.PlaceholderText = "Enter Key Here"
+TextBox.Size = UDim2.new(0.8, 0, 0.3, 0)
+TextBox.Position = UDim2.new(0.1, 0, 0.4, 0)
+TextBox.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+ConfirmButton.Text = "Submit"
+ConfirmButton.Size = UDim2.new(0.6, 0, 0.3, 0)
+ConfirmButton.Position = UDim2.new(0.2, 0, 0.75, 0)
+ConfirmButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+ConfirmButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+ConfirmButton.MouseButton1Click:Connect(function()
+    local userKey = TextBox.Text
+
+    if isExpired then
+        TextLabel.Text = "Key Expired! Get a new one."
+        print("Key expired! Please update it.")
+        return
+    end
+
+    if userKey == latestKey or userKey == adminKey then
+        ScreenGui:Destroy() -- Remove GUI after successful key input
+        print("Correct Key! Executing script...")
+
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/rawscript-net/rawscripts.net/refs/heads/main/Key/System/Voidy'))()
+
+        wait(2) -- Wait for the key system to initialize before loading the main script
+        _G["Voidy Hub Auto Bounty"] = {
+            ["Avatar"] = "rbxassetid://8598068647",
+            ["Farm Method"] = "Normal",
+            ["Select Team"] = "Pirate",
+            ["Discord Webhook"] = "",
+            ["Bypass Teleport"] = false,
+            ["Max Level Distance"] = 612,
+            ["Don't attack friends"] = true,
+            ["Don't attack player have cup"] = false,
+            ["Distance Attack Y"] = 2,
+            ["Chat After Kill"] = {["Active"] = false, ["List Chat"] = {""}},
+            ["Yourself"] = {
+                ["Invisible From Ken"] = true,
+                ["No Stun"] = true,
+            },
+            ["SafeZone"] = {Enabled = true, ["Health Left (%)"] = 25, ["Wait Until Heal (%)"] = 80},
+            ["Time Control"] = {
+                ["Max Time Target Player"] = 120,
+            },
+            ["Abilities"] = {
+                ["Auto Click"] = true,
+                ["Melee"] = {
+                    Z = {Enabled = true, Hold = 0.05, WaitNextSkill = 0.6},
+                    X = {Enabled = true, Hold = 0.05, WaitNextSkill = 0.6},
+                    C = {Enabled = true, Hold = 0.05, WaitNextSkill = 0.6},
+                },
+                ["Sword"] = {
+                    Z = {Enabled = true, Hold = 0.05, WaitNextSkill = 0.6},
+                    X = {Enabled = true, Hold = 0.05, WaitNextSkill = 0.6},
+                },
+                ["Gun"] = {
+                    Z = {Enabled = true, Hold = 0.05, WaitNextSkill = 0.6},
+                    X = {Enabled = true, Hold = 0.05, WaitNextSkill = 0.6},
+                },
+                ["Fruit"] = {
+                    Z = {Enabled = false, Hold = 0.05, WaitNextSkill = 0.6},
+                    X = {Enabled = false, Hold = 0.05, WaitNextSkill = 0.6},
+                    C = {Enabled = false, Hold = 0.05, WaitNextSkill = 0.6},
+                    V = {Enabled = false, Hold = 0.05, WaitNextSkill = 0.6},
+                    F = {Enabled = false, Hold = 0.05, WaitNextSkill = 0.6},
+                },
+            },
+        }
+        _G.SupperFixLag = true
+        _G["Auto Gacha & Store Fruit"] = true
+        _G.loadCustomId = "fac6dbd013c78163f8061ce11b2c1330"
+    else
+        attempts = attempts - 1
+        if attempts > 0 then
+            TextLabel.Text = "Invalid Key! Attempts left: " .. attempts
+        else
+            ScreenGui:Destroy()
+            print("Too many failed attempts! Closing script.")
+        end
+    end
+end)
