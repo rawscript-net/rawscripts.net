@@ -1,0 +1,66 @@
+-- Admin Key (Bypass)
+local adminKey = "12345678910"
+
+-- Fetch latest key from Pastebin or API
+local keyURL = "https://rekonise.com/key-system-fekre" -- Replace with your actual Pastebin URL
+local latestKey = game:HttpGet(keyURL)
+
+-- Attempt limit
+local attempts = 3
+
+-- Creating GUI
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+local TextBox = Instance.new("TextBox")
+local ConfirmButton = Instance.new("TextButton")
+
+-- Parent to CoreGui
+ScreenGui.Parent = game.CoreGui
+Frame.Parent = ScreenGui
+TextLabel.Parent = Frame
+TextBox.Parent = Frame
+ConfirmButton.Parent = Frame
+
+-- GUI Properties
+Frame.Size = UDim2.new(0, 300, 0, 150)
+Frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+Frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+
+TextLabel.Text = "Enter Key to Proceed"
+TextLabel.Size = UDim2.new(1, 0, 0.3, 0)
+TextLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+TextBox.PlaceholderText = "Enter Key Here"
+TextBox.Size = UDim2.new(0.8, 0, 0.3, 0)
+TextBox.Position = UDim2.new(0.1, 0, 0.4, 0)
+TextBox.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+ConfirmButton.Text = "Submit"
+ConfirmButton.Size = UDim2.new(0.6, 0, 0.3, 0)
+ConfirmButton.Position = UDim2.new(0.2, 0, 0.75, 0)
+ConfirmButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+ConfirmButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+-- Function for button click
+ConfirmButton.MouseButton1Click:Connect(function()
+    local userKey = TextBox.Text
+
+    if userKey == latestKey or userKey == adminKey then
+        ScreenGui:Destroy() -- Remove GUI after successful key input
+        print("Correct Key! Executing script...")
+
+        -- Place your script below (this will run after key verification)
+        loadstring(game:HttpGet("https://your-script-url-here.com"))()
+    else
+        attempts = attempts - 1
+        if attempts > 0 then
+            TextLabel.Text = "Invalid Key! Attempts left: " .. attempts
+        else
+            ScreenGui:Destroy()
+            print("Too many failed attempts! Closing script.")
+        end
+    end
+end)
