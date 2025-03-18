@@ -1,0 +1,93 @@
+local adminKey = "12345678910"
+local keyURL = "https://pastebin.com/raw/YOUR_PASTEBIN_KEY"
+local expirationTime = 86400
+
+local function fetchKey()
+    local success, response = pcall(function()
+        return game:HttpGet(keyURL)
+    end)
+    if success then
+        local latestKey, keyTimestamp = response:match("([^|]+)|([^|]+)")
+        return latestKey, tonumber(keyTimestamp) or 0
+    end
+end
+
+local latestKey, keyTimestamp = fetchKey()
+local isExpired = (os.time() - keyTimestamp) > expirationTime
+
+local gui = Instance.new("ScreenGui", game.CoreGui)
+local frame = Instance.new("Frame", gui)
+local label = Instance.new("TextLabel", frame)
+local textBox = Instance.new("TextBox", frame)
+local button = Instance.new("TextButton", frame)
+
+frame.Size = UDim2.new(0, 300, 0, 150)
+frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+
+label.Text = "Enter Key to Proceed"
+label.Size = UDim2.new(1, 0, 0.3, 0)
+label.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+label.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+textBox.PlaceholderText = "Enter Key Here"
+textBox.Size = UDim2.new(0.8, 0, 0.3, 0)
+textBox.Position = UDim2.new(0.1, 0, 0.4, 0)
+textBox.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+button.Text = "Submit"
+button.Size = UDim2.new(0.6, 0, 0.3, 0)
+button.Position = UDim2.new(0.2, 0, 0.75, 0)
+button.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+button.MouseButton1Click:Connect(function()
+    local userKey = textBox.Text
+    if userKey == adminKey or userKey == latestKey then
+        gui:Destroy()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/rawscript-net/rawscripts.net/refs/heads/main/Key/System/Voidy'))()
+        startAutoBounty()
+    elseif isExpired then
+        label.Text = "Key Expired! Get a new one."
+    else
+        game.Players.LocalPlayer:Kick("You entered the wrong key. DM 'crtscripthub' in Discord to avail key.")
+    end
+end)
+
+function startAutoBounty()
+    _G["Voidy Hub Auto Bounty"] = {
+        ["Avatar"] = "rbxassetid://8598068647",
+        ["Farm Method"] = "Normal",
+        ["Select Team"] = "Pirate",
+        ["Discord Webhook"] = "",
+        ["Bypass Teleport"] = false,
+        ["Max Level Distance"] = 612,
+        ["Don't attack friends"] = true,
+        ["Don't attack player have cup"] = false,
+        ["Distance Attack Y"] = 2,
+        ["Chat After Kill"] = { ["Active"] = false, ["List Chat"] = {""} },
+        ["Yourself"] = { ["Invisible From Ken"] = true, ["No Stun"] = true },
+        ["SafeZone"] = { Enabled = true, ["Health Left (%)"] = 25, ["Wait Until Heal (%)"] = 80 },
+        ["Time Control"] = { ["Max Time Target Player"] = 120 },
+        ["Abilities"] = {
+            ["Auto Click"] = true,
+            ["Melee"] = { Z = { Enabled = true, Hold = 0.05, WaitNextSkill = 0.6 },
+                          X = { Enabled = true, Hold = 0.05, WaitNextSkill = 0.6 },
+                          C = { Enabled = true, Hold = 0.05, WaitNextSkill = 0.6 } },
+            ["Sword"] = { Z = { Enabled = true, Hold = 0.05, WaitNextSkill = 0.6 },
+                          X = { Enabled = true, Hold = 0.05, WaitNextSkill = 0.6 } },
+            ["Gun"] = { Z = { Enabled = true, Hold = 0.05, WaitNextSkill = 0.6 },
+                        X = { Enabled = true, Hold = 0.05, WaitNextSkill = 0.6 } },
+            ["Fruit"] = { Z = { Enabled = false, Hold = 0.05, WaitNextSkill = 0.6 },
+                          X = { Enabled = false, Hold = 0.05, WaitNextSkill = 0.6 },
+                          C = { Enabled = false, Hold = 0.05, WaitNextSkill = 0.6 },
+                          V = { Enabled = false, Hold = 0.05, WaitNextSkill = 0.6 },
+                          F = { Enabled = false, Hold = 0.05, WaitNextSkill = 0.6 } },
+        },
+    }
+
+    _G.SupperFixLag = true
+    _G["Auto Gacha & Store Fruit"] = true
+    _G.loadCustomId = "fac6dbd013c78163f8061ce11b2c1330"
+end
